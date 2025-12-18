@@ -35,7 +35,7 @@ func main() {
 	defer close()
 
 	// Initialize handlers
-	prodRepo := models.NewProductsRepository(db)
+	prodRepo := models.NewGormProductRepository(db)
 	cat := catalog.NewCatalogHandler(prodRepo)
 
 	// Set up routing
