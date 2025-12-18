@@ -1,15 +1,16 @@
 package catalog
 
 import (
-	"encoding/json"
 	"net/http"
+
+	"github.com/mytheresa/go-hiring-challenge/app/api"
 )
 
 // HandleList List all categories
 func (h *CategoryHandler) HandleList(w http.ResponseWriter, r *http.Request) {
 	categories, err := h.repo.GetAll(r.Context())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		api.ErrorResponse(w, http.StatusInternalServerError, categoryListFailure, err.Error())
 		return
 	}
 
@@ -27,6 +28,5 @@ func (h *CategoryHandler) HandleList(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(resp)
+	api.OKResponse(w, resp, categoryListSuccess)
 }

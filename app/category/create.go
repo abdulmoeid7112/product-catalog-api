@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/mytheresa/go-hiring-challenge/app/api"
 	"github.com/mytheresa/go-hiring-challenge/models"
 )
 
@@ -15,7 +16,7 @@ func (h *CategoryHandler) HandleCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		http.Error(w, "invalid JSON body", http.StatusBadRequest)
+		api.ErrorResponse(w, http.StatusBadRequest, categoryInvalidJSON, err.Error())
 		return
 	}
 
@@ -25,11 +26,9 @@ func (h *CategoryHandler) HandleCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.repo.Create(r.Context(), cat); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		api.ErrorResponse(w, http.StatusInternalServerError, categoryCreateFailure, err.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(cat)
+	api.OKResponse(w, cat, categoryCreateSuccess)
 }

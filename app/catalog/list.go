@@ -1,10 +1,10 @@
 package catalog
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
+	"github.com/mytheresa/go-hiring-challenge/app/api"
 	"github.com/mytheresa/go-hiring-challenge/models"
 	"github.com/shopspring/decimal"
 )
@@ -46,7 +46,7 @@ func (h *CatalogHandler) HandleList(w http.ResponseWriter, r *http.Request) {
 
 	products, total, err := h.repo.List(r.Context(), filter)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		api.ErrorResponse(w, http.StatusInternalServerError, productListFailure, err.Error())
 		return
 	}
 
@@ -67,6 +67,5 @@ func (h *CatalogHandler) HandleList(w http.ResponseWriter, r *http.Request) {
 		Products: respProducts,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(response)
+	api.OKResponse(w, response, productListSuccess)
 }

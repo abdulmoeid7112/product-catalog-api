@@ -1,10 +1,10 @@
 package catalog
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/mytheresa/go-hiring-challenge/app/api"
 )
 
 func (h *CatalogHandler) HandleDetail(w http.ResponseWriter, r *http.Request) {
@@ -12,17 +12,18 @@ func (h *CatalogHandler) HandleDetail(w http.ResponseWriter, r *http.Request) {
 	code := vars["code"]
 
 	if code == "" {
-		http.Error(w, "product code required", http.StatusBadRequest)
+		api.ErrorResponse(w, http.StatusBadRequest, productCodeRequired, nil)
 		return
 	}
 
 	product, err := h.repo.GetByCode(r.Context(), code)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		api.ErrorResponse(w, http.StatusInternalServerError, productDetailsFailure, err.Error())
 		return
 	}
+
 	if product == nil {
-		http.Error(w, "product not found", http.StatusNotFound)
+		api.ErrorResponse(w, http.StatusNotFound, productNotExist, nil)
 		return
 	}
 
@@ -39,7 +40,7 @@ func (h *CatalogHandler) HandleDetail(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	resp := ProductDetailResponse{
+	api.OKResponse(w, ProductDetailResponse{
 		Code:  product.Code,
 		Price: product.Price.String(),
 		Category: CategoryResponse{
@@ -47,8 +48,5 @@ func (h *CatalogHandler) HandleDetail(w http.ResponseWriter, r *http.Request) {
 			Name: product.Category.Name,
 		},
 		Variants: variants,
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(resp)
+	}, productDetailsSuccess)
 }
