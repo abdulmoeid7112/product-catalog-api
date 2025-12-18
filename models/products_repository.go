@@ -9,6 +9,7 @@ import (
 
 type ProductRepository interface {
 	GetAll(ctx context.Context) ([]Product, error)
+	GetByCode(ctx context.Context, code string) (*Product, error)
 	List(ctx context.Context, filter ProductFilter) ([]Product, int64, error)
 }
 
@@ -71,4 +72,22 @@ func (r *productRepository) List(ctx context.Context, filter ProductFilter) ([]P
 		Find(&products).Error
 
 	return products, total, err
+}
+
+func (r *productRepository) GetByCode(ctx context.Context, code string) (*Product, error) {
+	var product Product
+	err := r.db.WithContext(ctx).
+		Preload("Variants").
+		Preload("Category").
+		Where("code = ?", code).
+		First(&product).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &product, nil
 }

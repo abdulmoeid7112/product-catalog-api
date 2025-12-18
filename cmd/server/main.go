@@ -2,14 +2,15 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+
 	"github.com/mytheresa/go-hiring-challenge/app/catalog"
 	"github.com/mytheresa/go-hiring-challenge/app/database"
 	"github.com/mytheresa/go-hiring-challenge/models"
@@ -38,14 +39,15 @@ func main() {
 	prodRepo := models.NewGormProductRepository(db)
 	cat := catalog.NewCatalogHandler(prodRepo)
 
-	// Set up routing
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /catalog", cat.HandleGet)
+	// Use Gorilla Mux
+	r := mux.NewRouter()
+	r.HandleFunc("/catalog", cat.HandleList).Methods("GET")
+	r.HandleFunc("/catalog/{code}", cat.HandleDetail).Methods("GET")
 
 	// Set up the HTTP server
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("localhost:%s", os.Getenv("HTTP_PORT")),
-		Handler: mux,
+		Addr:    ":" + os.Getenv("HTTP_PORT"),
+		Handler: r,
 	}
 
 	// Start the server
@@ -60,6 +62,8 @@ func main() {
 
 	<-ctx.Done()
 	log.Println("Shutting down server...")
-	srv.Shutdown(ctx)
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Printf("Shutdown error: %v", err)
+	}
 	stop()
 }
