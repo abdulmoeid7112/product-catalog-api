@@ -15,6 +15,7 @@ type Variant struct {
 	Price     decimal.Decimal `gorm:"type:decimal(10,2);null"`
 }
 
+// TableName specifies the database table name for Variant
 func (v *Variant) TableName() string {
 	return "product_variants"
 }

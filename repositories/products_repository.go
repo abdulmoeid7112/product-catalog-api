@@ -3,17 +3,20 @@ package repositories
 import (
 	"context"
 
-	"github.com/mytheresa/go-hiring-challenge/models"
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
+
+	"github.com/mytheresa/go-hiring-challenge/models"
 )
 
+// ProductRepository defines methods for product data access
 type ProductRepository interface {
 	GetAll(ctx context.Context) ([]models.Product, error)
 	GetByCode(ctx context.Context, code string) (*models.Product, error)
 	List(ctx context.Context, filter ProductFilter) ([]models.Product, int64, error)
 }
 
+// ProductFilter represents filtering and pagination options for listing products
 type ProductFilter struct {
 	CategoryCode string
 	MaxPrice     *decimal.Decimal
@@ -25,10 +28,12 @@ type productRepository struct {
 	db *gorm.DB
 }
 
+// NewGormProductRepository creates a new ProductRepository using GORM
 func NewGormProductRepository(db *gorm.DB) ProductRepository {
 	return &productRepository{db: db}
 }
 
+// GetAll returns all products with their variants and category
 func (r *productRepository) GetAll(ctx context.Context) ([]models.Product, error) {
 	var products []models.Product
 	err := r.db.WithContext(ctx).
@@ -39,6 +44,7 @@ func (r *productRepository) GetAll(ctx context.Context) ([]models.Product, error
 	return products, err
 }
 
+// List returns products based on filtering and pagination options
 func (r *productRepository) List(ctx context.Context, filter ProductFilter) ([]models.Product, int64, error) {
 
 	var (

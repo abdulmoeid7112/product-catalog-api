@@ -4,11 +4,13 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/shopspring/decimal"
+
 	"github.com/mytheresa/go-hiring-challenge/app/api"
 	"github.com/mytheresa/go-hiring-challenge/repositories"
-	"github.com/shopspring/decimal"
 )
 
+// HandleList List products with pagination and filtering
 func (h *CatalogHandler) HandleList(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 

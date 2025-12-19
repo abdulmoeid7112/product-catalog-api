@@ -6,12 +6,14 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/mytheresa/go-hiring-challenge/models"
-	"github.com/mytheresa/go-hiring-challenge/repositories/mocks"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mytheresa/go-hiring-challenge/models"
+	"github.com/mytheresa/go-hiring-challenge/repositories/mocks"
 )
 
+// TestCatalogDetailHandler tests the CatalogHandler's HandleDetail method
 func TestCatalogDetailHandler(t *testing.T) {
 	product := &models.Product{
 		Code:  "PROD001",

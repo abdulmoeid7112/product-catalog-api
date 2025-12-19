@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TestOKResponse tests the OKResponse function for successful JSON responses
 func TestOKResponse(t *testing.T) {
 	type samplePayload struct {
 		Message string `json:"message"`
@@ -32,6 +33,7 @@ func TestOKResponse(t *testing.T) {
 	})
 }
 
+// TestErrorResponse tests the ErrorResponse function for error JSON responses
 func TestErrorResponse(t *testing.T) {
 	t.Run("json response for a given http status code", func(t *testing.T) {
 		recorder := httptest.NewRecorder()

@@ -4,9 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+
 	"github.com/mytheresa/go-hiring-challenge/app/api"
 )
 
+// HandleDetail Get product details by code
 func (h *CatalogHandler) HandleDetail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	code := vars["code"]

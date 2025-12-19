@@ -6,11 +6,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/mytheresa/go-hiring-challenge/models"
 	"github.com/mytheresa/go-hiring-challenge/repositories/mocks"
-	"github.com/stretchr/testify/assert"
 )
 
+// TestCategoryListHandler tests the category listing handler
 func TestCategoryListHandler(t *testing.T) {
 	mockRepo := &mocks.MockCategoryRepository{
 		Categories: []models.Category{

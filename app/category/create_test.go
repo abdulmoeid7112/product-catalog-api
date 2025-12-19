@@ -7,11 +7,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/mytheresa/go-hiring-challenge/models"
 	"github.com/mytheresa/go-hiring-challenge/repositories/mocks"
-	"github.com/stretchr/testify/assert"
 )
 
+// TestCategoryCreateHandler tests the category creation handler
 func TestCategoryCreateHandler(t *testing.T) {
 	mockRepo := &mocks.MockCategoryRepository{}
 	handler := NewCategoryHandler(mockRepo)

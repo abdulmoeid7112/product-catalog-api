@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 
-	"github.com/mytheresa/go-hiring-challenge/models"
 	"gorm.io/gorm"
+
+	"github.com/mytheresa/go-hiring-challenge/models"
 )
 
+// CategoryRepository defines methods for category data access
 type CategoryRepository interface {
 	GetAll(ctx context.Context) ([]models.Category, error)
 	Create(ctx context.Context, category *models.Category) error
@@ -17,6 +19,7 @@ type categoryRepository struct {
 	db *gorm.DB
 }
 
+// NewGormCategoryRepository creates a new CategoryRepository using GORM
 func NewGormCategoryRepository(db *gorm.DB) CategoryRepository {
 	return &categoryRepository{db: db}
 }

@@ -5,12 +5,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/mytheresa/go-hiring-challenge/models"
-	"github.com/mytheresa/go-hiring-challenge/repositories/mocks"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mytheresa/go-hiring-challenge/models"
+	"github.com/mytheresa/go-hiring-challenge/repositories/mocks"
 )
 
+// TestCatalogListHandler tests the CatalogHandler's HandleList method
 func TestCatalogListHandler(t *testing.T) {
 	products := []models.Product{
 		{
