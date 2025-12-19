@@ -15,3 +15,6 @@ docker-up ::
 
 docker-down ::
 	docker compose down
+
+format ::
+	@gofmt -s -w .
