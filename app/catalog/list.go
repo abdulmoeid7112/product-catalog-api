@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/mytheresa/go-hiring-challenge/app/api"
-	"github.com/mytheresa/go-hiring-challenge/models"
+	"github.com/mytheresa/go-hiring-challenge/repositories"
 	"github.com/shopspring/decimal"
 )
 
@@ -32,7 +32,7 @@ func (h *CatalogHandler) HandleList(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	filter := models.ProductFilter{
+	filter := repositories.ProductFilter{
 		CategoryCode: q.Get("category"),
 		Offset:       offset,
 		Limit:        limit,

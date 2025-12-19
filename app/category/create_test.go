@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/mytheresa/go-hiring-challenge/models"
-	"github.com/mytheresa/go-hiring-challenge/models/mocks"
+	"github.com/mytheresa/go-hiring-challenge/repositories/mocks"
 	"github.com/stretchr/testify/assert"
 )
 

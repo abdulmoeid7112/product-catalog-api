@@ -1,15 +1,15 @@
 package catalog
 
 import (
-	"github.com/mytheresa/go-hiring-challenge/models"
+	"github.com/mytheresa/go-hiring-challenge/repositories"
 )
 
 // CategoryHandler handles category-related HTTP requests
 type CategoryHandler struct {
-	repo models.CategoryRepository
+	repo repositories.CategoryRepository
 }
 
 // NewCategoryHandler creates a new CategoryHandler
-func NewCategoryHandler(repo models.CategoryRepository) *CategoryHandler {
+func NewCategoryHandler(repo repositories.CategoryRepository) *CategoryHandler {
 	return &CategoryHandler{repo: repo}
 }

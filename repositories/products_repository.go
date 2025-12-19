@@ -1,16 +1,17 @@
-package models
+package repositories
 
 import (
 	"context"
 
+	"github.com/mytheresa/go-hiring-challenge/models"
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
 type ProductRepository interface {
-	GetAll(ctx context.Context) ([]Product, error)
-	GetByCode(ctx context.Context, code string) (*Product, error)
-	List(ctx context.Context, filter ProductFilter) ([]Product, int64, error)
+	GetAll(ctx context.Context) ([]models.Product, error)
+	GetByCode(ctx context.Context, code string) (*models.Product, error)
+	List(ctx context.Context, filter ProductFilter) ([]models.Product, int64, error)
 }
 
 type ProductFilter struct {
@@ -28,8 +29,8 @@ func NewGormProductRepository(db *gorm.DB) ProductRepository {
 	return &productRepository{db: db}
 }
 
-func (r *productRepository) GetAll(ctx context.Context) ([]Product, error) {
-	var products []Product
+func (r *productRepository) GetAll(ctx context.Context) ([]models.Product, error) {
+	var products []models.Product
 	err := r.db.WithContext(ctx).
 		Preload("Variants").
 		Preload("Category").
@@ -38,15 +39,15 @@ func (r *productRepository) GetAll(ctx context.Context) ([]Product, error) {
 	return products, err
 }
 
-func (r *productRepository) List(ctx context.Context, filter ProductFilter) ([]Product, int64, error) {
+func (r *productRepository) List(ctx context.Context, filter ProductFilter) ([]models.Product, int64, error) {
 
 	var (
-		products []Product
+		products []models.Product
 		total    int64
 	)
 
 	query := r.db.WithContext(ctx).
-		Model(&Product{}).
+		Model(&models.Product{}).
 		Joins("LEFT JOIN categories ON categories.id = products.category_id")
 
 	// Filtering
@@ -74,8 +75,8 @@ func (r *productRepository) List(ctx context.Context, filter ProductFilter) ([]P
 	return products, total, err
 }
 
-func (r *productRepository) GetByCode(ctx context.Context, code string) (*Product, error) {
-	var product Product
+func (r *productRepository) GetByCode(ctx context.Context, code string) (*models.Product, error) {
+	var product models.Product
 	err := r.db.WithContext(ctx).
 		Preload("Variants").
 		Preload("Category").

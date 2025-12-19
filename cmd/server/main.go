@@ -14,7 +14,7 @@ import (
 	"github.com/mytheresa/go-hiring-challenge/app/catalog"
 	category "github.com/mytheresa/go-hiring-challenge/app/category"
 	"github.com/mytheresa/go-hiring-challenge/app/database"
-	"github.com/mytheresa/go-hiring-challenge/models"
+	"github.com/mytheresa/go-hiring-challenge/repositories"
 )
 
 func main() {
@@ -37,10 +37,10 @@ func main() {
 	defer close()
 
 	// Initialize handlers
-	prodRepo := models.NewGormProductRepository(db)
+	prodRepo := repositories.NewGormProductRepository(db)
 	cat := catalog.NewCatalogHandler(prodRepo)
 
-	catRepo := models.NewGormCategoryRepository(db)
+	catRepo := repositories.NewGormCategoryRepository(db)
 	catHandler := category.NewCategoryHandler(catRepo)
 
 	// Use Gorilla Mux
@@ -50,7 +50,7 @@ func main() {
 	// Catalog routes
 	r.HandleFunc("/catalog", cat.HandleList).Methods("GET")
 	r.HandleFunc("/catalog/{code}", cat.HandleDetail).Methods("GET")
-	
+
 	// Category routes
 	r.HandleFunc("/categories", catHandler.HandleList).Methods("GET")
 	r.HandleFunc("/categories", catHandler.HandleCreate).Methods("POST")
