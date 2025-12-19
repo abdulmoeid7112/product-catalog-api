@@ -1,18 +1,75 @@
 # Go Hiring Challenge
 
-This repository contains a Go application for managing products and their prices, including functionalities for CRUD operations and seeding the database with initial data.
+This repository contains a Go application for managing a product catalog, including products, variants, and categories.  
+The application exposes REST APIs for listing products, retrieving product details, managing categories, and supports pagination, filtering, and standardized API responses.
 
 ## Project Structure
 
-1. **cmd/**: Contains the main application and seed command entry points.
+1. **cmd/**: Contains the application entry points.
 
-   - `server/main.go`: The main application entry point, serves the REST API.
-   - `seed/main.go`: Command to seed the database with initial product data.
+    - `server/main.go`: Main application entry point, serves the REST API.
+    - `seed/main.go`: Command to seed the database with initial product and category data.
 
-2. **app/**: Contains the application logic.
-3. **sql/**: Contains a very simple database migration scripts setup.
-4. **models/**: Contains the data models and repositories used in the application.
+2. **app/**: Contains application-level logic.
+    - `catalog/`: HTTP handlers for catalog-related endpoints.
+    - `categories/`: HTTP handlers for category-related endpoints.
+    - `api/`: Shared API utilities (standardized response helpers).
+    - `database/`: Database connection setup.
+
+3. **models/**: Domain models and repository interfaces/implementations.
+    - Product, Variant, and Category models
+    - Repository interfaces and GORM-based implementations
+
+4. **sql/**: Database migration scripts.
+
 5. `.env`: Environment variables file for configuration.
+
+## Features
+
+- Product catalog with variants
+- Product categories (Clothing, Shoes, Accessories)
+- Product details endpoint with variant price inheritance
+- Pagination with `offset` and `limit`
+- Filtering by category and max price
+- Standardized JSON API responses
+- OpenAPI specification generated from code
+- Unit tests for handlers and API utilities
+
+## API Endpoints
+
+### Catalog
+
+- `GET /catalog`  
+  List products with support for:
+    - Pagination (`offset`, `limit`)
+    - Filtering by category
+    - Filtering by max price
+
+- `GET /catalog/{code}`  
+  Retrieve product details by product code, including:
+    - Category information
+    - Variants (variants without price inherit product price)
+
+### Categories
+
+- `GET /categories`  
+  List all product categories.
+
+- `POST /categories`  
+  Create a new product category.
+
+## API Response Format
+
+All API responses follow a standardized format:
+
+```json
+{
+  "status": true,
+  "description": "Operation completed successfully",
+  "payload": {},
+  "errors": {}
+}
+```
 
 ## Setup Code Repository
 
