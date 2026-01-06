@@ -2,17 +2,19 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+
 	"github.com/mytheresa/go-hiring-challenge/app/catalog"
+	category "github.com/mytheresa/go-hiring-challenge/app/category"
 	"github.com/mytheresa/go-hiring-challenge/app/database"
-	"github.com/mytheresa/go-hiring-challenge/models"
+	"github.com/mytheresa/go-hiring-challenge/repositories"
 )
 
 func main() {
@@ -35,17 +37,28 @@ func main() {
 	defer close()
 
 	// Initialize handlers
-	prodRepo := models.NewProductsRepository(db)
+	prodRepo := repositories.NewGormProductRepository(db)
 	cat := catalog.NewCatalogHandler(prodRepo)
 
-	// Set up routing
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /catalog", cat.HandleGet)
+	catRepo := repositories.NewGormCategoryRepository(db)
+	catHandler := category.NewCategoryHandler(catRepo)
+
+	// Use Gorilla Mux
+	r := mux.NewRouter()
+
+	// Define routes
+	// Catalog routes
+	r.HandleFunc("/catalog", cat.HandleList).Methods("GET")
+	r.HandleFunc("/catalog/{code}", cat.HandleDetail).Methods("GET")
+
+	// Category routes
+	r.HandleFunc("/categories", catHandler.HandleList).Methods("GET")
+	r.HandleFunc("/categories", catHandler.HandleCreate).Methods("POST")
 
 	// Set up the HTTP server
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("localhost:%s", os.Getenv("HTTP_PORT")),
-		Handler: mux,
+		Addr:    ":" + os.Getenv("HTTP_PORT"),
+		Handler: r,
 	}
 
 	// Start the server
@@ -60,6 +73,8 @@ func main() {
 
 	<-ctx.Done()
 	log.Println("Shutting down server...")
-	srv.Shutdown(ctx)
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Printf("Shutdown error: %v", err)
+	}
 	stop()
 }
